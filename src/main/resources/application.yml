@@ -1,0 +1,30 @@
+server:
+   port: 8080
+spring:
+   webflux:
+      base-path: /stream-sqs
+   application:
+      name: STREAM-SQS
+   cloud:
+      # define functions that will be used on bindings (; separated)
+      function:
+         definition: AProcessor;BConsumer
+      stream:
+         # define sqs config bindings
+         sqs:
+            bindings:
+               AProcessor-in-0:
+                  consumer:
+                     snsFanout: false
+               BConsumer-in-0:
+                  consumer:
+                     snsFanout: false                  
+         # define cloud-stream function bindings
+         bindings:
+            # syntax is: <function&ComponentName>-in-0 or <function&ComponentName>-out-0
+            AProcessor-in-0:
+               destination: aQ.fifo
+            AProcessor-out-0:
+               destination: bQ.fifo
+            BConsumer-in-0:
+               destination: bQ.fifo
